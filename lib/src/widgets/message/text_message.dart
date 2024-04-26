@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-import 'package:flutter_link_previewer/flutter_link_previewer.dart'
-    show LinkPreview, regexLink;
+import 'package:flutter_link_previewer/flutter_link_previewer.dart' show LinkPreview, regexLink;
 import 'package:flutter_parsed_text/flutter_parsed_text.dart';
 
 import '../../models/emoji_enlargement_behavior.dart';
@@ -42,8 +41,7 @@ class TextMessage extends StatelessWidget {
   final Widget Function(types.User)? nameBuilder;
 
   /// See [LinkPreview.onPreviewDataFetched].
-  final void Function(types.TextMessage, types.PreviewData)?
-      onPreviewDataFetched;
+  final void Function(types.TextMessage, types.PreviewData)? onPreviewDataFetched;
 
   /// Customisation options for the [TextMessage].
   final TextMessageOptions options;
@@ -63,17 +61,11 @@ class TextMessage extends StatelessWidget {
     BuildContext context,
   ) {
     final linkDescriptionTextStyle = user.id == message.author.id
-        ? InheritedChatTheme.of(context)
-            .theme
-            .sentMessageLinkDescriptionTextStyle
-        : InheritedChatTheme.of(context)
-            .theme
-            .receivedMessageLinkDescriptionTextStyle;
+        ? InheritedChatTheme.of(context).theme.sentMessageLinkDescriptionTextStyle
+        : InheritedChatTheme.of(context).theme.receivedMessageLinkDescriptionTextStyle;
     final linkTitleTextStyle = user.id == message.author.id
         ? InheritedChatTheme.of(context).theme.sentMessageLinkTitleTextStyle
-        : InheritedChatTheme.of(context)
-            .theme
-            .receivedMessageLinkTitleTextStyle;
+        : InheritedChatTheme.of(context).theme.receivedMessageLinkTitleTextStyle;
 
     return LinkPreview(
       enableAnimation: true,
@@ -84,8 +76,7 @@ class TextMessage extends StatelessWidget {
       openOnPreviewImageTap: options.openOnPreviewImageTap,
       openOnPreviewTitleTap: options.openOnPreviewTitleTap,
       padding: EdgeInsets.symmetric(
-        horizontal:
-            InheritedChatTheme.of(context).theme.messageInsetsHorizontal,
+        horizontal: InheritedChatTheme.of(context).theme.messageInsetsHorizontal,
         vertical: InheritedChatTheme.of(context).theme.messageInsetsVertical,
       ),
       previewData: message.previewData,
@@ -127,8 +118,7 @@ class TextMessage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (showName)
-          nameBuilder?.call(message.author) ?? UserName(author: message.author),
+        if (showName) nameBuilder?.call(message.author) ?? UserName(author: message.author),
         if (enlargeEmojis)
           if (options.isTextSelectable)
             SelectableText(message.text, style: emojiTextStyle)
@@ -149,9 +139,8 @@ class TextMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final enlargeEmojis =
-        emojiEnlargementBehavior != EmojiEnlargementBehavior.never &&
-            isConsistsOfEmojis(emojiEnlargementBehavior, message);
+    final enlargeEmojis = emojiEnlargementBehavior != EmojiEnlargementBehavior.never &&
+        isConsistsOfEmojis(emojiEnlargementBehavior, message);
     final theme = InheritedChatTheme.of(context).theme;
     final user = InheritedUser.of(context).user;
     final width = MediaQuery.of(context).size.width;
@@ -231,8 +220,7 @@ class TextMessageText extends StatelessWidget {
                 ),
           ),
           boldMatcher(
-            style: boldTextStyle ??
-                bodyTextStyle.merge(PatternStyle.bold.textStyle),
+            style: boldTextStyle ?? bodyTextStyle.merge(PatternStyle.bold.textStyle),
           ),
           italicMatcher(
             style: bodyTextStyle.merge(PatternStyle.italic.textStyle),
@@ -241,8 +229,7 @@ class TextMessageText extends StatelessWidget {
             style: bodyTextStyle.merge(PatternStyle.lineThrough.textStyle),
           ),
           codeMatcher(
-            style: codeTextStyle ??
-                bodyTextStyle.merge(PatternStyle.code.textStyle),
+            style: codeTextStyle ?? bodyTextStyle.merge(PatternStyle.code.textStyle),
           ),
         ],
         maxLines: maxLines,

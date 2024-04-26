@@ -106,8 +106,7 @@ class Chat extends StatefulWidget {
   });
 
   /// See [Message.audioMessageBuilder].
-  final Widget Function(types.AudioMessage, {required int messageWidth})?
-      audioMessageBuilder;
+  final Widget Function(types.AudioMessage, {required int messageWidth})? audioMessageBuilder;
 
   /// See [Message.avatarBuilder].
   final Widget Function(types.User author)? avatarBuilder;
@@ -129,8 +128,7 @@ class Chat extends StatefulWidget {
   final String Function(DateTime)? customDateHeaderText;
 
   /// See [Message.customMessageBuilder].
-  final Widget Function(types.CustomMessage, {required int messageWidth})?
-      customMessageBuilder;
+  final Widget Function(types.CustomMessage, {required int messageWidth})? customMessageBuilder;
 
   /// See [Message.customStatusBuilder].
   final Widget Function(types.Message message, {required BuildContext context})?
@@ -168,8 +166,7 @@ class Chat extends StatefulWidget {
   final Widget? emptyState;
 
   /// See [Message.fileMessageBuilder].
-  final Widget Function(types.FileMessage, {required int messageWidth})?
-      fileMessageBuilder;
+  final Widget Function(types.FileMessage, {required int messageWidth})? fileMessageBuilder;
 
   /// Time (in ms) between two messages when we will visually group them.
   /// Default value is 1 minute, 60000 ms. When time between two messages
@@ -186,8 +183,7 @@ class Chat extends StatefulWidget {
   final Map<String, String>? imageHeaders;
 
   /// See [Message.imageMessageBuilder].
-  final Widget Function(types.ImageMessage, {required int messageWidth})?
-      imageMessageBuilder;
+  final Widget Function(types.ImageMessage, {required int messageWidth})? imageMessageBuilder;
 
   /// This feature allows you to use a custom image provider.
   /// This is useful if you want to manage image loading yourself, or if you need to cache images.
@@ -248,8 +244,7 @@ class Chat extends StatefulWidget {
   final void Function(BuildContext context, types.Message)? onMessageLongPress;
 
   /// See [Message.onMessageStatusLongPress].
-  final void Function(BuildContext context, types.Message)?
-      onMessageStatusLongPress;
+  final void Function(BuildContext context, types.Message)? onMessageStatusLongPress;
 
   /// See [Message.onMessageStatusTap].
   final void Function(BuildContext context, types.Message)? onMessageStatusTap;
@@ -261,8 +256,7 @@ class Chat extends StatefulWidget {
   final void Function(types.Message, bool visible)? onMessageVisibilityChanged;
 
   /// See [Message.onPreviewDataFetched].
-  final void Function(types.TextMessage, types.PreviewData)?
-      onPreviewDataFetched;
+  final void Function(types.TextMessage, types.PreviewData)? onPreviewDataFetched;
 
   /// See [Input.onSendPressed].
   final void Function(types.PartialText) onSendPressed;
@@ -288,7 +282,7 @@ class Chat extends StatefulWidget {
   final Widget Function(types.SystemMessage)? systemMessageBuilder;
 
   /// See [Message.textMessageBuilder].
-  final Widget Function(
+  final Widget? Function(
     types.TextMessage, {
     required int messageWidth,
     required bool showName,
@@ -321,12 +315,10 @@ class Chat extends StatefulWidget {
   final bool? useTopSafeAreaInset;
 
   /// See [Message.videoMessageBuilder].
-  final Widget Function(types.VideoMessage, {required int messageWidth})?
-      videoMessageBuilder;
+  final Widget Function(types.VideoMessage, {required int messageWidth})? videoMessageBuilder;
 
   /// See [Message.slidableMessageBuilder].
-  final Widget Function(types.Message, Widget msgWidget)?
-      slidableMessageBuilder;
+  final Widget Function(types.Message, Widget msgWidget)? slidableMessageBuilder;
 
   /// See [Message.isLeftStatus].
   /// If true, status will be shown on the left side of the message.
@@ -395,8 +387,7 @@ class ChatState extends State<Chat> {
   }
 
   /// Highlight the message with the specified [id].
-  void highlightMessage(String id, {Duration? duration}) =>
-      _scrollController.highlight(
+  void highlightMessage(String id, {Duration? duration}) => _scrollController.highlight(
         chatMessageAutoScrollIndexById[id]!,
         highlightDuration: duration ?? const Duration(seconds: 3),
       );
@@ -466,18 +457,16 @@ class ChatState extends State<Chat> {
       final Widget messageWidget;
 
       if (message is types.SystemMessage) {
-        messageWidget = widget.systemMessageBuilder?.call(message) ??
-            SystemMessage(message: message.text);
+        messageWidget =
+            widget.systemMessageBuilder?.call(message) ?? SystemMessage(message: message.text);
       } else {
         final maxWidth = widget.theme.messageMaxWidth;
-        final messageWidth =
-            widget.showUserAvatars && message.author.id != widget.user.id
-                ? min(constraints.maxWidth * widget.messageWidthRatio, maxWidth)
-                    .floor()
-                : min(
-                    constraints.maxWidth * (widget.messageWidthRatio + 0.06),
-                    maxWidth,
-                  ).floor();
+        final messageWidth = widget.showUserAvatars && message.author.id != widget.user.id
+            ? min(constraints.maxWidth * widget.messageWidthRatio, maxWidth).floor()
+            : min(
+                constraints.maxWidth * (widget.messageWidthRatio + 0.06),
+                maxWidth,
+              ).floor();
         final Widget msgWidget = Message(
           audioMessageBuilder: widget.audioMessageBuilder,
           avatarBuilder: widget.avatarBuilder,
@@ -500,8 +489,7 @@ class ChatState extends State<Chat> {
           onMessageStatusLongPress: widget.onMessageStatusLongPress,
           onMessageStatusTap: widget.onMessageStatusTap,
           onMessageTap: (context, tappedMessage) {
-            if (tappedMessage is types.ImageMessage &&
-                widget.disableImageGallery != true) {
+            if (tappedMessage is types.ImageMessage && widget.disableImageGallery != true) {
               _onImagePressed(tappedMessage);
             }
 
@@ -564,6 +552,7 @@ class ChatState extends State<Chat> {
   /// Updates the [chatMessageAutoScrollIndexById] mapping with the latest messages.
   void _refreshAutoScrollMapping() {
     chatMessageAutoScrollIndexById.clear();
+
     var i = 0;
     for (final object in _chatMessages) {
       if (object is UnreadHeaderData) {
@@ -640,27 +629,21 @@ class ChatState extends State<Chat> {
                                   ) =>
                                       ChatList(
                                     bottomWidget: widget.listBottomWidget,
-                                    bubbleRtlAlignment:
-                                        widget.bubbleRtlAlignment!,
+                                    bubbleRtlAlignment: widget.bubbleRtlAlignment!,
                                     isLastPage: widget.isLastPage,
-                                    itemBuilder: (Object item, int? index) =>
-                                        _messageBuilder(
+                                    itemBuilder: (Object item, int? index) => _messageBuilder(
                                       item,
                                       constraints,
                                       index,
                                     ),
                                     items: _chatMessages,
-                                    keyboardDismissBehavior:
-                                        widget.keyboardDismissBehavior,
+                                    keyboardDismissBehavior: widget.keyboardDismissBehavior,
                                     onEndReached: widget.onEndReached,
-                                    onEndReachedThreshold:
-                                        widget.onEndReachedThreshold,
+                                    onEndReachedThreshold: widget.onEndReachedThreshold,
                                     scrollController: _scrollController,
                                     scrollPhysics: widget.scrollPhysics,
-                                    typingIndicatorOptions:
-                                        widget.typingIndicatorOptions,
-                                    useTopSafeAreaInset:
-                                        widget.useTopSafeAreaInset ?? isMobile,
+                                    typingIndicatorOptions: widget.typingIndicatorOptions,
+                                    useTopSafeAreaInset: widget.useTopSafeAreaInset ?? isMobile,
                                   ),
                                 ),
                               ),
